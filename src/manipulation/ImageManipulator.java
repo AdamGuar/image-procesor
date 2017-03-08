@@ -2,22 +2,23 @@ package manipulation;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 
 public class ImageManipulator {
 	
-	BufferedImage imageToManipulate;
+/*	BufferedImage imageToManipulate;
 	
 	public ImageManipulator(BufferedImage imageToManipulate){
 		this.imageToManipulate = imageToManipulate;
-	}
+	}*/
 	
 	
 	
-	public BufferedImage binarize() {
+	public BufferedImage binarize(BufferedImage input) {
 		System.out.println("Binaryzing image");
-		BufferedImage original = toGray(this.imageToManipulate);
+		BufferedImage original = toGray(input);
 		
 	    int red;
 	    int newPixel;
@@ -44,9 +45,8 @@ public class ImageManipulator {
 	        }
 	    }
 	    System.out.println("Image binarized");
-	    byte[] imageBytes = extractBytes(binarized);
-	    sumBytes(imageBytes);
-	    dilate(binarized);
+	    
+  
 	    return binarized;
 	 
 	}
@@ -152,43 +152,48 @@ public class ImageManipulator {
 	    }
 	 
 	 
-	 private static byte[] extractBytes(BufferedImage input){
-		 
-		 WritableRaster raster = input.getRaster();
-		 DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-
-		 return ( data.getData() );
-		 
-	 }
-	 
-	 
-	 private static void sumBytes(byte[] imageBytes){
-		 int whiteCounter=0;
 	
-		 
-		 for(byte i : imageBytes){
-			 if(i==-1)
-				 whiteCounter++;
+	 
+	 
+	 public BufferedImage dilatate(BufferedImage input, int noDilatations){
+		 BufferedImage binarized = binarize(input);
+		 BufferedImage result = input;
+		 for(int i=0;i<noDilatations;i++){
+			 result = dilatate(result);
 		 }
-		 
-		 double percentage = whiteCounter/(float)imageBytes.length;
-		 
-		 System.out.println("Percentage of white pixels: "+percentage);
-		
+
+		 return result;
 	 }
 	 
 	 
-	 private static BufferedImage dilate(BufferedImage input){
+	 private  BufferedImage dilatate(BufferedImage input){
+		 BufferedImage backup = deepCopy(input);
 		 BufferedImage result = input;
-		 
 		 for(int i=0;i<input.getWidth();i++){
 			 for(int j=0;j<input.getHeight();j++){
-				
+				int counter=0;
+				 
+				if(j-1>=0)
+					 if(isWhite(backup.getRGB(i, j-1))) counter++;
+				 
+				 if(j+1<input.getHeight())
+					 if(isWhite(backup.getRGB(i, j+1))) counter++;
+				 
+				 
+				 if(i-1>=0)
+					 if(isWhite(backup.getRGB(i-1, j))) counter++;
+				 
+				 if(i+1<input.getWidth())
+					 if(isWhite(backup.getRGB(i+1, j))) counter++;
+				 
+				 Color colorWhite = new Color(255,255,255);
+				 
+				 if(counter>0){
+					 result.setRGB(i, j, colorWhite.getRGB()); 
+				 }
+				 
 			 }
 		 }
-		 
-
-		 
 		 return result;
 	 }
 
@@ -202,5 +207,14 @@ public class ImageManipulator {
 		 else
 			 return false; 
 	 }
+	 
+	 
+	 private static BufferedImage deepCopy(BufferedImage bi) {
+		 ColorModel cm = bi.getColorModel();
+		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 WritableRaster raster = bi.copyData(null);
+		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+		}
+	 
 
 }
