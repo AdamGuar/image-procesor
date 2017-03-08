@@ -29,6 +29,8 @@ public class ImageProcesor {
 		
 		
 		
+		
+		
 		System.out.println("Saving image as output.jpg");
 		writeImage("output",binarized);   
 		

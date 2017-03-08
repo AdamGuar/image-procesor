@@ -2,6 +2,8 @@ package manipulation;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
 
 public class ImageManipulator {
 	
@@ -42,6 +44,9 @@ public class ImageManipulator {
 	        }
 	    }
 	    System.out.println("Image binarized");
+	    byte[] imageBytes = extractBytes(binarized);
+	    sumBytes(imageBytes);
+	    dilate(binarized);
 	    return binarized;
 	 
 	}
@@ -74,7 +79,9 @@ public class ImageManipulator {
 	            red = new Color(original.getRGB(i, j)).getRed();
 	            green = new Color(original.getRGB(i, j)).getGreen();
 	            blue = new Color(original.getRGB(i, j)).getBlue();
-	 
+	          
+	            
+	            
 	            red = (int) (0.21 * red + 0.71 * green + 0.07 * blue);
 	            // Return back to original format
 	            newPixel = colorToRGB(alpha, red, red, red);
@@ -143,6 +150,57 @@ public class ImageManipulator {
 	        return histogram;
 	 
 	    }
+	 
+	 
+	 private static byte[] extractBytes(BufferedImage input){
+		 
+		 WritableRaster raster = input.getRaster();
+		 DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
 
+		 return ( data.getData() );
+		 
+	 }
+	 
+	 
+	 private static void sumBytes(byte[] imageBytes){
+		 int whiteCounter=0;
+	
+		 
+		 for(byte i : imageBytes){
+			 if(i==-1)
+				 whiteCounter++;
+		 }
+		 
+		 double percentage = whiteCounter/(float)imageBytes.length;
+		 
+		 System.out.println("Percentage of white pixels: "+percentage);
+		
+	 }
+	 
+	 
+	 private static BufferedImage dilate(BufferedImage input){
+		 BufferedImage result = input;
+		 
+		 for(int i=0;i<input.getWidth();i++){
+			 for(int j=0;j<input.getHeight();j++){
+				
+			 }
+		 }
+		 
+
+		 
+		 return result;
+	 }
+
+	 
+	 private static boolean isWhite(int rgb){
+		 
+		 Color color = new Color(rgb);
+		 
+		 if(color.getRed()==255&&color.getGreen()==255&&color.getBlue()==255)
+			 return true;
+		 else
+			 return false; 
+	 }
 
 }
