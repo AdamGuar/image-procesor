@@ -34,16 +34,31 @@ public class ImageProcesor {
 		
 		double martensiteBinary = fc.getPercentageOfMartenzite();
 		
-		System.out.println("Saving binary image as binarized.jpg");
-		writeImage("binarized",binarized);   
+		System.out.println("Saving binary image as binarized+file-name");
+		writeImage("binarized-"+filename,binarized);   
 		
-		BufferedImage dilatated = im.dilatate(binarized, 1);
+		BufferedImage output = binarized;
 		
-		System.out.println("Saving binary dilatated image as dilatated.jpg");
-		writeImage("dilatated",dilatated);   
+		//Otwarcie
+		output = im.erose(output, 1);
+		output = im.dilatate(output, 1);
+		
+		//Zamkniêcie
+		output = im.dilatate(output, 1);
+		output = im.erose(output, 1);
+		
+		//tylko erose
+		output = im.erose(output, 1);
 		
 
-		fc.setBinaryImage(dilatated);
+		
+		
+		
+		System.out.println("Saving binary processed image as output.jpg");
+		writeImage("output-"+filename,output);   
+		
+
+		fc.setBinaryImage(output);
 		
 		double martensiteDilatate = fc.getPercentageOfMartenzite();
 		
@@ -56,7 +71,7 @@ public class ImageProcesor {
 	
 	
 	 private static void writeImage(String output, BufferedImage imageToSave) throws IOException {
-	        File file = new File(output+".jpg");
+	        File file = new File(output);
 	        ImageIO.write(imageToSave, "jpg", file);
 	    }
 

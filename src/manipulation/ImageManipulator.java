@@ -196,6 +196,48 @@ public class ImageManipulator {
 		 }
 		 return result;
 	 }
+	 
+	 public BufferedImage erose(BufferedImage input, int noErosions){
+		 BufferedImage binarized = binarize(input);
+		 BufferedImage result = input;
+		 for(int i=0;i<noErosions;i++){
+			 result = erose(result);
+		 }
+
+		 return result;
+	 }
+	 
+	 private  BufferedImage erose(BufferedImage input){
+		 BufferedImage backup = deepCopy(input);
+		 BufferedImage result = input;
+		 for(int i=0;i<input.getWidth();i++){
+			 for(int j=0;j<input.getHeight();j++){
+				int counter=0;
+				 
+				if(j-1>=0)
+					 if(isWhite(backup.getRGB(i, j-1))) counter++;
+				 
+				 if(j+1<input.getHeight())
+					 if(isWhite(backup.getRGB(i, j+1))) counter++;
+				 
+				 
+				 if(i-1>=0)
+					 if(isWhite(backup.getRGB(i-1, j))) counter++;
+				 
+				 if(i+1<input.getWidth())
+					 if(isWhite(backup.getRGB(i+1, j))) counter++;
+				 
+				 Color colorBlack = new Color(0,0,0);
+				 
+				 if(counter>0&&counter<3){
+					 result.setRGB(i, j, colorBlack.getRGB()); 
+				 }
+				 
+			 }
+		 }
+		 return result;
+	 }
+	 
 
 	 
 	 private static boolean isWhite(int rgb){
