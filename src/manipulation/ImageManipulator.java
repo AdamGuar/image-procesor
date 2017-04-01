@@ -2,20 +2,22 @@ package manipulation;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 
 public class ImageManipulator {
 	
-	BufferedImage imageToManipulate;
+/*	BufferedImage imageToManipulate;
 	
 	public ImageManipulator(BufferedImage imageToManipulate){
 		this.imageToManipulate = imageToManipulate;
-	}
+	}*/
 	
 	
 	
-	public BufferedImage binarize() {
+	public BufferedImage binarize(BufferedImage input) {
 		System.out.println("Binaryzing image");
-		BufferedImage original = toGray(this.imageToManipulate);
+		BufferedImage original = toGray(input);
 		
 	    int red;
 	    int newPixel;
@@ -42,6 +44,8 @@ public class ImageManipulator {
 	        }
 	    }
 	    System.out.println("Image binarized");
+	    
+  
 	    return binarized;
 	 
 	}
@@ -74,7 +78,9 @@ public class ImageManipulator {
 	            red = new Color(original.getRGB(i, j)).getRed();
 	            green = new Color(original.getRGB(i, j)).getGreen();
 	            blue = new Color(original.getRGB(i, j)).getBlue();
-	 
+	          
+	            
+	            
 	            red = (int) (0.21 * red + 0.71 * green + 0.07 * blue);
 	            // Return back to original format
 	            newPixel = colorToRGB(alpha, red, red, red);
@@ -143,6 +149,111 @@ public class ImageManipulator {
 	        return histogram;
 	 
 	    }
+	 
+	 
+	
+	 
+	 
+	 public BufferedImage dilatate(BufferedImage input, int noDilatations){
+		 BufferedImage result = input;
+		 for(int i=0;i<noDilatations;i++){
+			 result = dilatate(result);
+		 }
 
+		 return result;
+	 }
+	 
+	 
+	 private  BufferedImage dilatate(BufferedImage input){
+		 BufferedImage backup = deepCopy(input);
+		 BufferedImage result = input;
+		 for(int i=0;i<input.getWidth();i++){
+			 for(int j=0;j<input.getHeight();j++){
+				int counter=0;
+				 
+				if(j-1>=0)
+					 if(isWhite(backup.getRGB(i, j-1))) counter++;
+				 
+				 if(j+1<input.getHeight())
+					 if(isWhite(backup.getRGB(i, j+1))) counter++;
+				 
+				 
+				 if(i-1>=0)
+					 if(isWhite(backup.getRGB(i-1, j))) counter++;
+				 
+				 if(i+1<input.getWidth())
+					 if(isWhite(backup.getRGB(i+1, j))) counter++;
+				 
+				 Color colorWhite = new Color(255,255,255);
+				 
+				 if(counter>0){
+					 result.setRGB(i, j, colorWhite.getRGB()); 
+				 }
+				 
+			 }
+		 }
+		 return result;
+	 }
+	 
+	 public BufferedImage erose(BufferedImage input, int noErosions){
+		 BufferedImage result = input;
+		 for(int i=0;i<noErosions;i++){
+			 result = erose(result);
+		 }
+
+		 return result;
+	 }
+	 
+	 private  BufferedImage erose(BufferedImage input){
+		 BufferedImage backup = deepCopy(input);
+		 BufferedImage result = input;
+		 for(int i=0;i<input.getWidth();i++){
+			 for(int j=0;j<input.getHeight();j++){
+				int counter=0;
+				 
+				if(j-1>=0)
+					 if(isWhite(backup.getRGB(i, j-1))) counter++;
+				 
+				 if(j+1<input.getHeight())
+					 if(isWhite(backup.getRGB(i, j+1))) counter++;
+				 
+				 
+				 if(i-1>=0)
+					 if(isWhite(backup.getRGB(i-1, j))) counter++;
+				 
+				 if(i+1<input.getWidth())
+					 if(isWhite(backup.getRGB(i+1, j))) counter++;
+				 
+				 Color colorBlack = new Color(0,0,0);
+				 
+				 if(counter>0&&counter<3){
+					 result.setRGB(i, j, colorBlack.getRGB()); 
+				 }
+				 
+			 }
+		 }
+		 return result;
+	 }
+	 
+
+	 
+	 private static boolean isWhite(int rgb){
+		 
+		 Color color = new Color(rgb);
+		 
+		 if(color.getRed()==255&&color.getGreen()==255&&color.getBlue()==255)
+			 return true;
+		 else
+			 return false; 
+	 }
+	 
+	 
+	 private static BufferedImage deepCopy(BufferedImage bi) {
+		 ColorModel cm = bi.getColorModel();
+		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 WritableRaster raster = bi.copyData(null);
+		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+		}
+	 
 
 }
