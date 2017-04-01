@@ -41,21 +41,5 @@ public class FractionCalculator {
 		 return whiteCounter/(float)imageBytes.length;
 		 
 	 }
-	 
-	 
-	 private static void sumWhites(byte[] imageBytes){
-		 int whiteCounter=0;
-	
-		 
-		 for(byte i : imageBytes){
-			 if(i==-1)
-				 whiteCounter++;
-		 }
-		 
-		 
-		 
-		 System.out.println("Number of white pixels: "+whiteCounter);
-		
-	 }
 
 }

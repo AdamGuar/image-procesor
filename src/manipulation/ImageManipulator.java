@@ -3,7 +3,6 @@ package manipulation;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
-import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 
 public class ImageManipulator {
@@ -156,7 +155,6 @@ public class ImageManipulator {
 	 
 	 
 	 public BufferedImage dilatate(BufferedImage input, int noDilatations){
-		 BufferedImage binarized = binarize(input);
 		 BufferedImage result = input;
 		 for(int i=0;i<noDilatations;i++){
 			 result = dilatate(result);
@@ -198,7 +196,6 @@ public class ImageManipulator {
 	 }
 	 
 	 public BufferedImage erose(BufferedImage input, int noErosions){
-		 BufferedImage binarized = binarize(input);
 		 BufferedImage result = input;
 		 for(int i=0;i<noErosions;i++){
 			 result = erose(result);
