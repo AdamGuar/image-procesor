@@ -42,13 +42,13 @@ public class ImageProcesor {
 		//Otwarcie
 		output = im.erose(output, 1);
 		output = im.dilatate(output, 1);
-		
+		/*
 		//Zamkniêcie
 		output = im.dilatate(output, 1);
 		output = im.erose(output, 1);
 		
 		//tylko erose
-		output = im.erose(output, 1);
+		output = im.erose(output, 1);*/
 		
 
 		
@@ -63,7 +63,7 @@ public class ImageProcesor {
 		double martensiteDilatate = fc.getPercentageOfMartenzite();
 		
 		System.out.println("Fraction of martenstie in binary: "+martensiteBinary);
-		System.out.println("Fraction of martenstie in binary dilatated: "+martensiteDilatate);
+		System.out.println("Fraction of martenstie in binary processed with opening: "+martensiteDilatate);
 		
 
 	}
